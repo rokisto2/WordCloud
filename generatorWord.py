@@ -117,7 +117,8 @@ def generate_cloud(id, name, power):
 
 
 if __name__ == '__main__':
-
+    #Выбераем откуда будет генерация
+    run = input('Choose where to run the generator\nS - start\nE - end\n')
     fonts = []
     # Берём все шрифты
     for filename in os.listdir("fonts"):
@@ -136,7 +137,10 @@ if __name__ == '__main__':
     db = wikiDB()
     db.db_clear_pic()
     row = db.get_wiki_word()
-
+    #Если с конца то перварачеваем вывод
+    if run.lower() == 'e':
+        row = row[::-1]
+    row=row[:int(len(row)/2)]
     while True:
         print(k)
         rows = row[0:8]
