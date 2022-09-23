@@ -70,7 +70,7 @@ def generatedJson(id, name, power, Sattelites, style, sattelites):
         },
         *Sattelite
     ]}
-    with open(f'/mnt/HC_Volume_22862748/Json3/{int(k/10000)+1}/{id}.json', 'w') as outfile:
+    with open(f'mnt/HC_Volume_22862748/Json3/{int(k/10000)+1}/{id}.json', 'w') as outfile:
         json.dump(my_list, outfile, indent=4)
 
 
@@ -87,25 +87,25 @@ def generate_cloud(id, name, power):
             stopwords = set(STOPWORDS)
             background_color, color, font = generate_coralmap(id)
             try:
-                os.mkdir(f"/mnt/HC_Volume_22862748/Img3/{int(k/10000)+1}")
+                os.mkdir(f"mnt/HC_Volume_22862748/Img3/{int(k/10000)+1}")
             except:
                 pass
             try:
-                os.mkdir(f"/mnt/HC_Volume_22862748/Json3/{int(k/10000)+1}")
+                os.mkdir(f"mnt/HC_Volume_22862748/Json3/{int(k/10000)+1}")
             except:
                 pass
             if font != ' ':
                 wordcloud = WordCloud(stopwords=stopwords, width=1600, height=1600, max_font_size=450, min_font_size=30,
                                       max_words=1000000, colormap=color, background_color=background_color,
                                       font_path='fonts/' + font).fit_words(text)
-                wordcloud.to_file(f'/mnt/HC_Volume_22862748/Img3/{int(k/10000)+1}/{id}.png')
+                wordcloud.to_file(f'mnt/HC_Volume_22862748/Img3/{int(k/10000)+1}/{id}.png')
                 style = font
                 generatedJson(id, s, power, p, style, list(l))
             else:
                 wordcloud = WordCloud(stopwords=stopwords, width=1600, height=1600, max_font_size=450, min_font_size=30,
                                       max_words=1000000, colormap=color, background_color=background_color,
                                       ).fit_words(text)
-                wordcloud.to_file(f'/mnt/HC_Volume_22862748/Img3/{int(k/10000)+1}/{id}.png')
+                wordcloud.to_file(f'mnt/HC_Volume_22862748/Img3/{int(k/10000)+1}/{id}.png')
                 style = font
                 generatedJson(id, s, power, p, 'Def', list(l))
     db.db_set_pic(id)
@@ -114,20 +114,21 @@ def generate_cloud(id, name, power):
 if __name__ == '__main__':
 
     fonts = []
+
     for filename in os.listdir("fonts"):
         fonts.append(filename)
-    # try:
-    #     shutil.rmtree('mnt/HC_Volume_22862748/Img3')
-    #     os.mkdir('mnt/HC_Volume_22862748/Img3')
-    # except:
-    #     os.mkdir('mnt/HC_Volume_22862748/Img3')
-    # try:
-    #     shutil.rmtree('mnt/HC_Volume_22862748/Json3')
-    #     os.mkdir('mnt/HC_Volume_22862748/Json3')
-    # except:
-    #     os.mkdir('mnt/HC_Volume_22862748/Json3')
+    try:
+        shutil.rmtree('mnt/HC_Volume_22862748/Img3')
+        os.mkdir('mnt/HC_Volume_22862748/Img3')
+    except:
+        os.mkdir('mnt/HC_Volume_22862748/Img3')
+    try:
+        shutil.rmtree('mnt/HC_Volume_22862748/Json3')
+        os.mkdir('mnt/HC_Volume_22862748/Json3')
+    except:
+        os.mkdir('mnt/HC_Volume_22862748/Json3')
     db = wikiDB()
-    #db.db_clear_pic()
+    db.db_clear_pic()
     row = db.get_wiki_word()
 
 
@@ -135,54 +136,12 @@ if __name__ == '__main__':
         print(k)
         rows = row[0:8]
         row = row[8:]
-        t1 = threading.Thread(target=generate_cloud, args=(rows[0][0], rows[0][1], rows[0][2]))
-        t2 = threading.Thread(target=generate_cloud, args=(rows[1][0], rows[1][1], rows[1][2]))
-        t3 = threading.Thread(target=generate_cloud, args=(rows[2][0], rows[2][1], rows[2][2]))
-        t4 = threading.Thread(target=generate_cloud, args=(rows[3][0], rows[3][1], rows[3][2]))
-        t5 = threading.Thread(target=generate_cloud, args=(rows[4][0], rows[4][1], rows[4][2]))
-        t6 = threading.Thread(target=generate_cloud, args=(rows[5][0], rows[5][1], rows[5][2]))
-        t7 = threading.Thread(target=generate_cloud, args=(rows[6][0], rows[6][1], rows[6][2]))
-        t8 = threading.Thread(target=generate_cloud, args=(rows[7][0], rows[7][1], rows[7][2]))
+        t = []
+        for row0 in rows:
+            t.append(threading.Thread(target=generate_cloud, args=(row0[0], row0[1], row0[2])))
 
-        t9 = threading.Thread(target=generate_cloud, args=(rows[8][0], rows[8][1], rows[8][2]))
-        t10 = threading.Thread(target=generate_cloud, args=(rows[9][0], rows[9][1], rows[9][2]))
-        t11 = threading.Thread(target=generate_cloud, args=(rows[10][0], rows[10][1], rows[10][2]))
-        t12 = threading.Thread(target=generate_cloud, args=(rows[11][0], rows[11][1], rows[11][2]))
-        t13 = threading.Thread(target=generate_cloud, args=(rows[12][0], rows[12][1], rows[12][2]))
-        t14 = threading.Thread(target=generate_cloud, args=(rows[13][0], rows[13][1], rows[13][2]))
-        t15 = threading.Thread(target=generate_cloud, args=(rows[14][0], rows[14][1], rows[14][2]))
-        t16 = threading.Thread(target=generate_cloud, args=(rows[15][0], rows[15][1], rows[15][2]))
+        for i in t:
+            i.start()
 
-        t1.start()
-        t2.start()
-        t3.start()
-        t4.start()
-        t5.start()
-        t6.start()
-        t7.start()
-        t8.start()
-        t9.start()
-        t10.start()
-        t11.start()
-        t12.start()
-        t13.start()
-        t14.start()
-        t15.start()
-        t16.start()
-
-        t1.join()
-        t2.join()
-        t3.join()
-        t4.join()
-        t5.join()
-        t6.join()
-        t7.join()
-        t8.join()
-        t9.join()
-        t10.join()
-        t11.join()
-        t12.join()
-        t13.join()
-        t14.join()
-        t15.join()
-        t16.join()
+        for i in t:
+            i.join()
